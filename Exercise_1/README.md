@@ -50,8 +50,27 @@ To execute the program use the mpirun command as follow
 
 
 
-Remember that the program is an hybrid parallelization and to specify the number of openMP threads each MPI process will spawn use the environmental variable OPENMP_NUM_THREADS as follow `export OPENMP_NUM_THREADS=<number_of_threads_per_process>`. 
-  
-    
+Remember that the program is an hybrid parallelization and to specify the number of openMP threads each MPI process will spawn use the environmental variable OPENMP_NUM_THREADS with `export OPENMP_NUM_THREADS=<number_of_threads_per_process>`. 
+
+### Data generated 
+As the program game_of_life finish it's evolution, a file *data.txt* is created and inside it's saved the number of generated threads , the number of MPI processes and the mean of the time taken by the evolution. If the file allready exist all those data are appended into suh file. 
+
+
+This file can be used to plot a scalability study with gnuplot. 
+
+
+The results of the evolution are instead saved on the folder results which is resetted evry new run of the program. 
+
+
+The programm will also print on the standard output some usefull information like the option taken , the number of MPI processes and the number of openMP threads. 
+
+### Sbatch scripts
+The sbatch scripts can be used to generate the data required for the scalability studies. They can be found on the data folder and can be used with `sbatch <sbatch_script>`. 
+They are :
+- slurm_grid.job: used to produce the openMP scalability datas
+- slurm_gri_MPI.job: used to produce the strong MPI scalability datas
+- slurm_grid_serial.job: used to produce the serial time for the 3 studied dimensioons
+
+The job will save the data in the scalability folder and will also save on the output_grid folder the output produced in the standard output. 
 
 
