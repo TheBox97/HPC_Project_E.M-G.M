@@ -72,6 +72,6 @@ They are :
 - slurm_gri_MPI.job: used to produce the strong MPI scalability datas
 - slurm_grid_serial.job: used to produce the serial time for the 3 studied dimensioons
 
-The job will save the data in the scalability folder and will also save on the output_jobs folder the output produced in the standard output. 
+The job will also create an *output_job.out* file to save all the standar outputs. 
 
 
