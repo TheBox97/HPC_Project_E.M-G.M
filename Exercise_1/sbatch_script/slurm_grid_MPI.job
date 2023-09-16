@@ -2,7 +2,7 @@
 ## Name of the Job
 #SBATCH -J OpenMP_15k  
 ##Directory of the output 
-#SBATCH --output=./output_jobs/output_grid.out 
+#SBATCH --output=./output_job.out 
 ## Partirion
 #SBATCH -p EPYC
 ## Time required by the job 
@@ -21,4 +21,4 @@ mpirun  -np $i --display-map --map-by core  ./game_of_life.x -r -n 100 -f setup.
 
 done
 
-mv data.txt data/data_MPI.txt
+mv data.txt data_MPI.txt

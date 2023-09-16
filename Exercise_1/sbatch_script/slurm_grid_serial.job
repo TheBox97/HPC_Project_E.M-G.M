@@ -2,7 +2,7 @@
 ## Name of the Job
 #SBATCH -J OpenMP_15k  
 ##Directory of the output 
-#SBATCH --output=./output_jobs/output_grid.out 
+#SBATCH --output=./output_job.out 
 ## Partirion
 #SBATCH -p EPYC
 ## Time required by the job 
@@ -17,6 +17,6 @@ do
 ./game_of_life.x -i -k $i -f setup.pgm
 export OMP_NUM_THREADS=1
 mpirun  -np 1 --display-map --map-by socket  ./game_of_life.x -r -n 100 -f setup.pgm 
-mv data.txt data/data_serial_$i.txt 
+mv data.txt data_serial_$i.txt 
 done
 
