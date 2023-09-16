@@ -11,4 +11,25 @@ The content of this folder is the following:
 | check_set_ups   | Folder containing some initial configurations used to check the correctness of the program|
 |data | Folder containing all the data generated during the scalability studies | 
 
+### Compilation of the program 
+To compile the program ensure first to have downloaded the gcc and mpicc compilers (on ORFEO load the compilers with the command `module load openMPI/4.1.5/gnu/12.2.1`). If somone wish to change compilers remember to change them into the Make file. 
+
+To run the compilation just use the command `make` inside the Files folder. 
+
+After the compilation the following files and folder will be created: 
+1. game_of_life.x: executable of the program game_of_life
+2. converter.x: executable of the converter program
+3. results: folder required to the game_of_life program to write the results
+
+**(!NOTE: if you wish to run the executable game_of_life.x on a different directory remember to move also the results folder!)**
+
+### Execution of the program 
+1.The *converter.x* executable is used to produce an image from an arbitrary grid set up built in the set_up.txt file. To create the configuration use . to denote dead cells and O (big o) do denote an alive cell. After creating the configuration in the set_up.txt file run the program as follow: 
+
+`./converter.x <number_of_rows> <number_of_columns> <cell_size>` 
+
+The program will create two images representing the original and scaled version of the desired grid configuration. This program was principally used to check the correctness of the game_of_life program. 
+
+2.The *game_of_life.x* executable 
+
 
