@@ -39,6 +39,8 @@ The program will create two images representing the original and scaled version 
 - `-s <frequency>` to specify the frequency to return the result of the current step evolution
 - `-e` to run the ordered evolution (by defoult it runs the static evolution)
 - `-c <cell_size>` to print the results in a scaled version with each cell of dimension cell_size x cell_size (meanly used to check the correctnes of the program)
+
+  
 To execute the program use the mpirun command as follow
 
 `mpirun <mpirun_options> ./game_of_life.x <game_of_life_options>`
