@@ -1,0 +1,24 @@
+#!/bin/bash
+## Name of the Job
+#SBATCH -J OpenMP_15k  
+##Directory of the output 
+#SBATCH --output=./output_jobs/output_grid.out 
+## Partirion
+#SBATCH -p EPYC
+## Time required by the job 
+#SBATCH --time=120
+## Number of nodes
+#SBATCH -N 1
+##Number of core per node
+#SBATCH --tasks-per-node=128
+
+./game_of_life.x -i -k 10000 -f setup.pgm
+
+for i in  {1..128..1}
+do
+export OMP_NUM_THREADS=1
+mpirun  -np $i --display-map --map-by core  ./game_of_life.x -r -n 100 -f setup.pgm 
+
+done
+
+mv data.txt data/data_MPI.txt
