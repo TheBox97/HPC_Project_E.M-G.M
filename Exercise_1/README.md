@@ -44,7 +44,11 @@ The program will create two images representing the original and scaled version 
 
 To execute the program use the mpirun command as follow
 
+
+
 `mpirun <mpirun_options> ./game_of_life.x <game_of_life_options>`
+
+
 
 Remember that the program is an hybrid parallelization and to specify the number of openMP threads each MPI process will spawn use the environmental variable OPENMP_NUM_THREADS as follow `export OPENMP_NUM_THREADS=<number_of_threads_per_process>`. 
   
