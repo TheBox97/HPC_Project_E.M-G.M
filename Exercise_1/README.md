@@ -51,7 +51,7 @@ To execute the program use the mpirun command as follow
 
 
 
-Remember that the program is an hybrid parallelization and to specify the number of openMP threads each MPI process will spawn use the environmental variable OPENMP_NUM_THREADS with `export OPENMP_NUM_THREADS=<number_of_threads_per_process>`. 
+Remember that the program is an hybrid parallelization and to specify the number of openMP threads each MPI process will spawn use the environmental variable OMP_NUM_THREADS with `export OMP_NUM_THREADS=<number_of_threads_per_process>`. 
 
 ### Data generated 
 As the program game_of_life finish it's evolution, a file *data.txt* is created and inside it's saved the number of generated threads , the number of MPI processes and the mean of the time taken by the evolution. If the file allready exist all those data are appended into suh file. 
