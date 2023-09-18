@@ -57,7 +57,7 @@ Remember that the program is an hybrid parallelization and to specify the number
 As the program game_of_life finish it's evolution, a file *data.txt* is created and inside it's saved the number of generated threads , the number of MPI processes and the mean of the time taken by the evolution. If the file allready exist all those data are appended into suh file. 
 
 
-This file can be used to plot a scalability study with gnuplot. 
+This file can be used to plot a scalability study with gnuplot. The data used for our scalability studies and the gnuplot script are present in the data folder. 
 
 
 The results of the evolution are instead saved on the folder results which is resetted evry new run of the program. 
