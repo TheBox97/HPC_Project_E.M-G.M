@@ -35,12 +35,6 @@ int main(int argc,char**argv){
     void*image;
     char create;
     MPI_Init_thread( &argc, &argv,MPI_THREAD_FUNNELED,&mpi_provided_thread_level );
-
-/*if(mpi_provided_thread_level< MPI_THREAD_FUNNELED ){
-printf("Problema da definire\n");
-MPI_Finalize();
-return 1;
-}*/
     MPI_Comm_rank( MPI_COMM_WORLD,&rank);
     MPI_Comm_size( MPI_COMM_WORLD,&size );
 
@@ -61,34 +55,34 @@ return 1;
             case 'k':
                 total_size=atoi(optarg);
                 if(rank==0)
-                printf("ricevuto le dimensioni con valore %s\n",optarg);
+                printf("Recived size of %s\n",optarg);
                 break;
             case 'n':
                 if(rank==0)
-                printf("ricevuto l'opzione iteration con valore %s\n",optarg);
+                printf("Number of evolution steps: %s\n",optarg);
                 iteration=atoi(optarg);
                 break;
             case 'i':
                 if(rank==0)
-                printf("Creo il set-up iniziale\n");
+                printf("Creating the initial set_up\n");
                 create='i';
                 break;
                 
             case 'r':
                 if(rank==0)
-                printf("Eseguo l'evoluzione\n");
+                printf("Running the evolution \n");
                 create='r';
                 break;
 
              case 'e':
                 if(rank==0)
-                printf("Eseguo l'evoluzione ordered \n");
+                printf("Ordered evolution setted on \n");
                 create='e';
                 break;
 
             case 's':
                 if(rank==0)
-                printf("Stampa risultato ogni %s\n",optarg);
+                printf("Print the results every %s\n",optarg);
                 print=atoi(optarg);
                 break;
             case 'c':
@@ -101,19 +95,19 @@ return 1;
 
             case 'f':
                 if(rank==0)
-                printf("Nome file:%s\n",optarg);
+                printf("File Name:%s\n",optarg);
                 nome=optarg;
                 
                 break;
 
             case '?':
                 if(rank==0)
-                printf("Istruzione %c non riconosciuta\n",optopt);// optopt è la variabile esterna che punta all'opzione letta
+                printf("Option %c not existing \n",optopt);// optopt è la variabile esterna che punta all'opzione letta
                 return 1;
 
             case ':':
               if(rank==0)
-              printf("L'argomento %c richiede di specificare un argomento\n",optopt);
+              printf("The option %c needs an argument\n",optopt);
               return 1;
         }
     }
@@ -121,7 +115,7 @@ return 1;
 //check if the user specified a file 
 if (nome==NULL){
 if(rank==0)
-printf("Nome immagine non specificato\n");
+printf("File name not specified\n");
  return 1;}
 
 //Initialization mode
@@ -135,7 +129,7 @@ printf("Nome immagine non specificato\n");
         for(int k=1;k<size;k++)
         MPI_Recv(image+x*y*k,(k==size-1)?((x+total_size%size)*y):(x*y), MPI_CHAR,k,0,MPI_COMM_WORLD,&status);
          write_pgm_image(image,total_size,total_size,nome);
-          printf("Creato l'immagine di dimensioni %dx%d\n",total_size,total_size);
+          printf("Created the initial set_up of dimension %dx%d\n",total_size,total_size);
     }
     if(rank!=0){MPI_Ssend(image,x*y, MPI_CHAR,0,0,MPI_COMM_WORLD);}
     MPI_Finalize();
@@ -147,10 +141,10 @@ printf("Nome immagine non specificato\n");
 if (create=='r'){
 if(file_exists(nome)==false){
     if(rank==0)
-    printf("FILE SPECIFICATO INESISTENTE\n");
+    printf("Specified file name not existing\n");
     return 1;}
 
-if(rank==0){// ATTENZIONE IL PROGRAMMA CRASHA SE NON SI È CREATA LA CARTELLA results
+if(rank==0){
 // DELETING ALL THE PRECEDENT FILES IN THE results_serial and results_parallel directories 
  DIR *theFolder = opendir("./results");
     struct dirent *next_file;
@@ -178,7 +172,7 @@ if(size>total_size){
     printf("NUMBER OF PROCESSES HIGHER THEN THE NUMBER OF ROWS\n");
     return 1;}
 if(rank==0)
-    printf("Usato l'immagine %s di dimensioni %dx%d\n",nome,total_size,total_size);
+    printf("Used the image %s of dimension %dx%d\n",nome,total_size,total_size);
 if (print==0){print=iteration;}
 for(int t=0;t<mean;t++){
 
@@ -192,9 +186,10 @@ for(int t=0;t<mean;t++){
   if (total_size%size!=0&rank==(size-1)){x=x+total_size%size;}
 
   dimension=x*y;
+upper=(char*)calloc(y,sizeof(char));    
+lower=(char*)calloc(y,sizeof(char));
 MPI_Barrier(MPI_COMM_WORLD);
 if(t==0)
-printf("Inizio programma MPI %d-----------------------------\n",rank);
 begin=MPI_Wtime();
 for(int k=1;k<iteration+1;k++){
   New=(char*)calloc( dimension, sizeof(char) );
@@ -203,7 +198,8 @@ for(int k=1;k<iteration+1;k++){
 #pragma omp parallel 
 {n_threads=omp_get_num_threads();
 #pragma omp master
-{if (k==1&t==0)printf("PROCESSO %d spawna %d thread\n",rank,n_threads);}
+{if (k==1&t==0)
+printf("Process %d spawn %d threads\n",rank,n_threads);}
 #pragma omp for schedule(static)
   for(int i=1;i<(x-1);i++){
       for(int j=0;j<(y);j++){
@@ -213,8 +209,7 @@ for(int k=1;k<iteration+1;k++){
     }
   }
 }
-upper=(char*)calloc(y,sizeof(char));    //provare ad allocarli fuori dall'iterazione 
-lower=(char*)calloc(y,sizeof(char));
+
 
 
 
@@ -275,24 +270,14 @@ if(rank!=0){MPI_Ssend(Grid,x*y, MPI_CHAR,0,0,MPI_COMM_WORLD);}
 
 }
 
-/*if(k%print==0 & scale==true){
-cells=(char*)calloc(total_size*total_size*cell_dim,sizeof(char));
-for(int i=0;i<total_size;i++) {
-    for(int j=0;j<total_size;j++){
-        color(cells,Grid,cell_size,total_size,i,j);
-    }
-}
-sprintf(filename,"./results/result%d.pgm",k);
-write_pgm_image((void*)cells,total_size*cell_size,total_size*cell_size,filename);
-free (cells);
-}*/
+
 }
 MPI_Barrier(MPI_COMM_WORLD);
 end=MPI_Wtime();
 time=time+(end-begin);}
 if(rank==0){
 printf("write done\n");// Avviso della fine scrittura
-printf("Tempo medio impiegato dal processo: %f\n",time/mean);
+printf("Avarage time taken to the process: %f\n",time/mean);
 
 if(file_exists("data.txt")==true){
 FILE* output;
@@ -314,11 +299,11 @@ return 0;
 
 
 
-
+//ordered evolution
 if(create=='e'){
 if(file_exists(nome)==false&rank==0){
     if(rank==0)
-    printf("FILE SPECIFICATO INESISTENTE\n");
+    printf("File Name not found\n");
     return 1;}
 if(rank==0){
 // DELETING ALL THE PRECEDENT FILES IN THE results_serial and results_parallel directories 
@@ -344,7 +329,7 @@ if(rank==0){
 
 image=read_pgm_image(&total_size,&total_size,nome);
 if(rank==0)
-    printf("Usato l'immagine %s di dimensioni %dx%d\n",nome,total_size,total_size);
+    printf("Used the image %s with dimension %dx%d\n",nome,total_size,total_size);
 if (print==0){print=iteration;}
 x=total_size/size;
   y=total_size;
@@ -356,7 +341,7 @@ x=total_size/size;
   dimension=x*y;
 MPI_Barrier(MPI_COMM_WORLD);
 if(rank==0)
-    printf("Inizio programma ordered\n");
+    printf("Starting ordered evolution\n");
 
 
 for(int k=1;k<iteration+1;k++){
@@ -409,32 +394,34 @@ Grid=New;
 New=NULL;
 
 
-if(k%print==0 & scale==false){
+if(k%print==0 ){
 if(rank==0){
     Grid=realloc(Grid,sizeof(char)*total_size*total_size);
-    
         for(int z=1;z<size;z++)
         MPI_Recv(Grid+x*y*z,(z==size-1)?((x+total_size%size)*y):(x*y), MPI_CHAR,z,0,MPI_COMM_WORLD,&status);
+    if(scale==false){
     sprintf(filename,"./results/result%d.pgm",k);
-    write_pgm_image((void*) Grid,total_size,total_size,filename);         
+    write_pgm_image((void*) Grid,total_size,total_size,filename);
+    }
+    if(scale==true){
+        cells=(char*)calloc(total_size*total_size*cell_dim,sizeof(char));
+        for(int i=0;i<total_size;i++) {
+            for(int j=0;j<total_size;j++){
+                color(cells,Grid,cell_size,total_size,i,j);
+             }
+        }
+        sprintf(filename,"./results/result%d.pgm",k);
+        write_pgm_image((void*)cells,total_size*cell_size,total_size*cell_size,filename);
+        free (cells);
+
+    }   
 }
 
 if(rank!=0){MPI_Ssend(Grid,x*y, MPI_CHAR,0,0,MPI_COMM_WORLD);}
 
 }
 
-/*if(k%print==0 & scale==true){
-cells=(char*)calloc(dimension*cell_dim,sizeof(char));
-for(int i=0;i<total_size;i++) {
-    for(int j=0;j<total_size;j++){
-        color(cells,Grid,cell_size,total_size,i,j);
-    }
-}
-sprintf(filename,"./results_serial/result%d.pgm",k);
-write_pgm_image((void*)cells,total_size*cell_size,total_size*cell_size,filename);
-free (cells);
-}*/
-}
+
 if (rank==0)
     printf("Write done\n");
 free(image);
@@ -443,4 +430,5 @@ return 0;
 
 }
 
+}
 }
