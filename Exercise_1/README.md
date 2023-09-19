@@ -68,9 +68,10 @@ The programm will also print on the standard output some usefull information lik
 ### Sbatch scripts
 The sbatch scripts can be used to generate the data required for the scalability studies. They can be found on the sbatch_script folder and can be used by moving them into the Files folder and running the command `sbatch <sbatch_script>`.  
 They are :
-- slurm_grid.job: used to produce the openMP scalability datas
-- slurm_gri_MPI.job: used to produce the strong MPI scalability datas
-- slurm_grid_serial.job: used to produce the serial time for the 3 studied dimensioons
+- slurm_grid_openmp.job: used to produce the openMP scalability datas
+- slurm_gri_MPI_strong.job: used to produce the strong MPI scalability datas
+- slurm_gri_MPI_weak.job: used to produce the weak MPI scalability datas
+- slurm_grid_serial.job: used to produce the serial time for the 3 studied dimensioons in the openMP scalability
 
 The job will also create an *output_job.out* file to save all the standar outputs. 
 
