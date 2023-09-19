@@ -15,7 +15,7 @@
 
 ./game_of_life.x -i -k 500 -f setup.pgm
 
-for i in  {1..2..1}
+for i in  {1..64..1}
 do
 export OMP_NUM_THREADS=$i
 mpirun  -np 2 --display-map --map-by socket  ./game_of_life.x -r -n 100 -f setup.pgm 

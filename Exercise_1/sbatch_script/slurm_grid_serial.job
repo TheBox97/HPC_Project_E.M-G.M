@@ -1,7 +1,7 @@
 #!/bin/bash
 ## Name of the Job
 #SBATCH -J OpenMP_15k  
-##Directory of the output 
+##Directory containing the stndard output  
 #SBATCH --output=./output_job.out 
 ## Partirion
 #SBATCH -p EPYC
@@ -10,7 +10,7 @@
 ## Number of nodes
 #SBATCH -N 1
 ##Number of core per node
-#SBATCH --tasks-per-node=128
+#SBATCH --tasks-per-node=1
 
 for i in  {5000..15000..5000}
 do 
