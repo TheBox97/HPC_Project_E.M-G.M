@@ -11,7 +11,7 @@
 #SBATCH -N 2
 ##Number of core per node
 #SBATCH --tasks-per-node=128
-
+module load openMPI/4.1.5/gnu/12.2.1
 ./game_of_life.x -i -k 10000 -f setup.pgm
 
 for i in  {1..256..1}
