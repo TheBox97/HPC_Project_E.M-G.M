@@ -7,12 +7,7 @@
 #include<header_update_rules.h>
 
 
-// Il formato dell'immagine è P5 (estensione.pgm) ed è come segue:
-// P5
-// # COMMENTI
-// dim1 dim2
-// maxvalue
-//unica riga contenente i valori di ogni pixel IN  1 o 2 CHAR (8/16 bits per valore[=> il maxvalue puo essere 255 o 65535])
+
 
 
 
@@ -212,7 +207,7 @@ printf("Process %d spawn %d threads\n",rank,n_threads);}
 
 
 
-
+//passing and recieving the upper and lower buffers
 MPI_Isend(Grid+(x-1)*y, y, MPI_CHAR,(rank+1<size)?(rank+1):0,1,MPI_COMM_WORLD,&request_upper_s);
 MPI_Irecv(lower, y, MPI_CHAR,(rank+1<size)?(rank+1):0,0,MPI_COMM_WORLD,&request_lower_r);
 
@@ -242,7 +237,7 @@ for(int j=0;j<(y);j++)
 Grid=NULL;
 Grid=New;
 New=NULL;
-
+//writing the results
 if(k%print==0 ){
 if(rank==0){
     Grid=realloc(Grid,sizeof(char)*total_size*total_size);
@@ -278,7 +273,7 @@ time=time+(end-begin);}
 if(rank==0){
 printf("write done\n");// Avviso della fine scrittura
 printf("Avarage time taken to the process: %f\n",time/mean);
-
+//writing on data.txt
 if(file_exists("data.txt")==true){
 FILE* output;
 output=fopen("data.txt","a");// Apro un file per scriverci
